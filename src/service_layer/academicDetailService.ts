@@ -1,6 +1,7 @@
 import { AcademicDetail } from "./../modals";
 import { collection, OperationResult } from "./common";
 
+
 export default class AcademicDetailService {
 	private static academicDetailCollection = collection<AcademicDetail>(
 		"AcademicDetails"
@@ -9,7 +10,6 @@ export default class AcademicDetailService {
 		id: string
 	): Promise<OperationResult<AcademicDetail>> => {
 		try {
-			console.log("hello bhai 1")
 			let doc = await AcademicDetailService.academicDetailCollection
 				.doc(id)
 				.get();
@@ -23,3 +23,11 @@ export default class AcademicDetailService {
 		}
 	};
 }
+
+// AcademicDetailService.academicDetailCollection.get().then((i)=>{
+// 	i.forEach((j) =>  console.log(j.data()))
+// })
+
+AcademicDetailService.getAcademicDetail('17egjcs161@gitjaipur.com').then((i)=>{
+	console.log(i);
+})
