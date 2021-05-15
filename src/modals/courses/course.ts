@@ -2,7 +2,7 @@ export default interface Course {
 	id: string;
 	name: string;
 	abbrivation: string;
-	numberOfSemester: number;
-	timeDurationInYears: number;
+	numOfSemester: number;
+	timeDurationInYear: number;
 	departments: string[];
 }
