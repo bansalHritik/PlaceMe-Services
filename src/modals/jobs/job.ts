@@ -4,23 +4,20 @@ import Period from "./period";
 import Round from "./round";
 
 export default interface Job {
-id: string,
+id?: string,
 title:string,
 description:string,
 salary: Salary,
 bond: Bond,
-doesExist: boolean,
-amount: number,
-period: Period,
-forBatch: string[],
-lastDateToApply: Date,
+forBatchs: number[],
+lastDateToApply?: Date,
 isActive: boolean,
 rounds: Round[],
 company: string,
-job: Job,
-forCourse: string[]
+forCourses: string[]
 maxBacklogs: number
 forDepartments: string[],
-postDate: Date,
-placedStudents: string[]
+postDate?: Date,
+placedStudents: string[],
+maxAcademicGap:number;
 }

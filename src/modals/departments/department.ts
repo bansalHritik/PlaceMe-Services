@@ -2,7 +2,7 @@ import Faculty from './faculty';
 
 export default interface Department {
   id: string,
-  faculties: Faculty[],
+  faculties: Faculty,
   hodEmail: string,
   name: string,
   abbrivation: string

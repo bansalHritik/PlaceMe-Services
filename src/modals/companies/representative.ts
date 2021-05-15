@@ -1,5 +1,5 @@
 export default interface Repersentative {
 	name: string,
-	mobile: string,
+	mobile: number,
 	email: string
 };

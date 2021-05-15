@@ -4,5 +4,5 @@ export default interface CompletedRequest extends PendingRequest {
 	isAccepted: boolean;
 	message: string;
 	verifiedBy: string;
-	verifiedOn: Date;
+	verifiedOn?: Date;
 }

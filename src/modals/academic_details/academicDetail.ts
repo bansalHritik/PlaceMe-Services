@@ -9,6 +9,6 @@ export default interface AcademicDetail {
 	secondary: Secondary;
 	seniorSecondary: SeniorSecondary;
 	graduation: Graduation;
-	postGraduation: PostGraduation;
+	postGraduation?: PostGraduation;
 	academicGap: number;
 };

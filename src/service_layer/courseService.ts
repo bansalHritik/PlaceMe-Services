@@ -21,12 +21,37 @@ export default class CourseService {
 			return { successful: false, error: e?.message };
 		}
 	};
+
+	static addCourseDetail = async (data: Course): Promise<OperationResult<any>> => {
+		try {
+			await CourseService.courseCollection
+				.doc(data.id)
+				.set(data);
+			return { successful: true}
+		}
+		catch (e) {
+			return { successful: false, error: "Failed to add Course data." }
+		}
+
+	}
 }
 
+// const data:Course = {
+// 	id:'M.Tech',
+// 	departments: [ 'CSE' ],
+// 	name: 'Master in Technology',
+// 	numOfSemester: 4,
+// 	timeDurationInYear: 2,
+// 	abbrivation: 'M.Tech'
+//   }
 
 // CourseService.courseCollection.get().then((i)=>{
 // 		i.forEach((j) =>  console.log(j.id,"---->",j.data()))
 // 	})
 // CourseService.getCourseDetail('B.Tech').then((i)=>{
+// 	console.log(i.data);
+// })
+
+// CourseService.addCourseDetail(data).then((i)=>{
 // 	console.log(i);
 // })
