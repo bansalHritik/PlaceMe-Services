@@ -1,36 +1,11 @@
 import { JobApplication } from "../modals";
 import { collection, OperationResult } from "./common";
-export default class JobApplicationService {
-    static jobApplicationCollection = collection<JobApplication>(
-		"JobApplications"
-	);
-	static getJobApplicationDetail = async (
-		id: string
-	): Promise<OperationResult<JobApplication>> => {
-		try {
-			let doc = await JobApplicationService.jobApplicationCollection
-				.doc(id)
-				.get();
-			if (!doc.exists) {
-				throw Error("Job Application Details not Found");
-			}
-			let data = await doc.data();
-			return { data, successful: true };
-		} catch (e) {
-			return { successful: false, error: e?.message };
-		}
-	};
-	
-	static addJobApplicationDetail = async (data: JobApplication): Promise<OperationResult<any>> => {
-		try {
-			await JobApplicationService.jobApplicationCollection
-				.add(data);
-			return { successful: true}
-		}
-		catch (e) {
-			return { successful: false, error: "Failed to add Department data." }
-		}
+import FirebaseCollection from './firebaseCollection';
 
+
+export default class JobApplicationService extends FirebaseCollection<JobApplication> {
+	constructor() {
+		super("JobApplications");
 	}
 }
 

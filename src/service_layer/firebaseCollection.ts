@@ -1,7 +1,7 @@
 import { collection as firebaseCollection, OperationResult } from "./common";
 import { firebase } from "../firebase";
 
-class FirebaseCollection<T> {
+export default class FirebaseCollection<T> {
     private collection: firebase.firestore.CollectionReference<T>;
 
     constructor(name: string) {
@@ -16,29 +16,40 @@ class FirebaseCollection<T> {
         return { successful: false, error }
     }
 
-    public async set(data: T, id: string) {
+    public async set(data: T, id: string): Promise<OperationResult<T>> {
         try {
             await this.collection.doc(id).set(data);
-            
             return this.successResult();
         } catch (error) {
-
+            return this.failureResult(error)
         }
     }
 
-    public async add(data: T) {
-        const { id } = await this.collection.add(data);
-        return this.successResult({ ...data, id });
+    public async add(data: T): Promise<OperationResult<T>> {
+        try {
+            const { id } = await this.collection.add(data);
+            return this.successResult({ ...data, id });
+        } catch (error) {
+            return this.failureResult(error);
+        }
     }
 
-    public async update(data: T, id: string) {
-        await this.update(data, id);
-        return this.successResult();
+    public async update(data: T, id: string): Promise<OperationResult<T>> {
+        try {
+            await this.collection.doc(id).update(data);
+            return this.successResult();
+        } catch (error) {
+            return this.failureResult(error)
+        }
     }
 
-    public async remove(id: string) {
-        await this.collection.doc(id).delete();
-        return this.successResult();
+    public async remove(id: string): Promise<OperationResult<T>> {
+        try {
+            await this.collection.doc(id).delete();
+            return this.successResult();
+        } catch (error) {
+            return this.failureResult(error);
+        }
     }
 
     public async get(docId: string): Promise<OperationResult<T>> {
@@ -54,7 +65,18 @@ class FirebaseCollection<T> {
         }
     }
 
-    public async getAll() {
-        const { } = await this.collection.get();
+    public async getAll(): Promise<OperationResult<T[]>> {
+        try {
+            const { docs } = await this.collection.get();
+            const result: T[] = [];
+            docs.forEach((doc) => {
+                const data = doc.data();
+                result.push(data);
+            })
+            return { successful: true, data: result };
+        }
+        catch (error) {
+            return { successful: false, error }
+        }
     }
 }

@@ -1,37 +1,11 @@
 import { Company } from "../modals";
 import { collection, OperationResult } from "./common";
+import FirebaseCollection from './firebaseCollection'
 
-export default class CompanyService {
-static companyCollection = collection<Company>(
-		"Companies"
-	);
-	static getCompanyDetail = async (
-		id: string
-	): Promise<OperationResult<Company>> => {
-		try {
-			let doc = await CompanyService.companyCollection
-				.doc(id)
-				.get();
-			if (!doc.exists) {
-				throw Error("Company Details not Found");
-			}
-			let data = await doc.data();
-			return { data, successful: true };
-		} catch (e) {
-			return { successful: false, error: e?.message };
-		}
-	};
 
-	static addCompanyDetail = async (data: Company): Promise<OperationResult<any>> => {
-		try {
-			await CompanyService.companyCollection
-				.add(data);
-			return { successful: true }
-		}
-		catch (e) {
-			return { successful: false, error: "Failed to add company data." }
-		}
-
+export default class CompanyService extends FirebaseCollection<Company>{
+	constructor() {
+		super("Companies");
 	}
 }
 

@@ -1,39 +1,13 @@
 import { Course } from "../modals";
 import { collection, OperationResult } from "./common";
+import FirebaseCollection from './firebaseCollection'
 
-export default class CourseService {
-     static courseCollection = collection<Course>(
-		"Courses"
-	);
-	static getCourseDetail = async (
-		id: string
-	): Promise<OperationResult<Course>> => {
-		try {
-			let doc = await CourseService.courseCollection
-				.doc(id)
-				.get();
-			if (!doc.exists) {
-				throw Error("Courses Details not Found");
-			}
-			let data = await doc.data();
-			return { data, successful: true };
-		} catch (e) {
-			return { successful: false, error: e?.message };
-		}
-	};
 
-	static addCourseDetail = async (data: Course): Promise<OperationResult<any>> => {
-		try {
-			await CourseService.courseCollection
-				.doc(data.id)
-				.set(data);
-			return { successful: true}
-		}
-		catch (e) {
-			return { successful: false, error: "Failed to add Course data." }
-		}
-
+export default class CourseService extends FirebaseCollection<Course> {
+	constructor() {
+		super("Courses");
 	}
+
 }
 
 // const data:Course = {
