@@ -1,38 +1,11 @@
 import { Department } from '../modals'
 import { collection, OperationResult } from "./common";
+import FirebaseCollection from './firebaseCollection'
 
-export default class DepartmentService {
-    static departmentCollection = collection<Department>(
-		"Departments"
-	);
-	static getDepartmentDetail = async (
-		id: string
-	): Promise<OperationResult<Department>> => {
-		try {
-			let doc = await DepartmentService.departmentCollection
-				.doc(id)
-				.get();
-			if (!doc.exists) {
-				throw Error("Departments Details not Found");
-			}
-			let data = await doc.data();
-			return { data, successful: true };
-		} catch (e) {
-			return { successful: false, error: e?.message };
-		}
-	};
 
-	static addDepartmentDetail = async (data: Department): Promise<OperationResult<any>> => {
-		try {
-			await DepartmentService.departmentCollection
-				.doc(data.id)
-				.set(data);
-			return { successful: true}
-		}
-		catch (e) {
-			return { successful: false, error: "Failed to add Department data." }
-		}
-
+export default class DepartmentService extends FirebaseCollection<Department> {
+	constructor() {
+		super("Departments");
 	}
 }
 

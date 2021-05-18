@@ -1,8 +1,14 @@
 import { CompletedRequest } from "../modals";
-import { collection, OperationResult } from "./common";
+import FirebaseCollection from './firebaseCollection'
 
-export default class CompletedRequestService {
-    static completedRequestCollection = collection<CompletedRequest>(
+export default class CompletedRequestService extends FirebaseCollection<CompletedRequest>{
+
+	constructor() {
+		super("CompletedRequests");
+	}
+}
+/**
+ * static completedRequestCollection = collection<CompletedRequest>(
 		"CompletedRequests"
 	);
 	static getCompletedRequestDetail = async (
@@ -31,9 +37,7 @@ export default class CompletedRequestService {
 		catch (e) {
 			return { successful: false, error: "Failed to add CompletedRequest data." }
 		}
-
-	}
-}
+ */
 
 // const data:CompletedRequest = {
 //     message: 'nahi hua tera update',

@@ -1,46 +1,25 @@
 import { AcademicDetail } from "./../modals";
 import { collection, OperationResult } from "./common";
+import FirebaseCollection  from './firebaseCollection'
 
 
-export default class AcademicDetailService {
-	static academicDetailCollection = collection<AcademicDetail>(
-		"AcademicDetails"
-	);
-	static getAcademicDetail = async (
-		id: string
-	): Promise<OperationResult<AcademicDetail>> => {
-		try {
-			let doc = await AcademicDetailService.academicDetailCollection
-				.doc(id)
-				.get();
-			if (!doc.exists) {
-				throw Error("Academic Details not Found");
-			}
-			let data = await doc.data();
-			return { data, successful: true };
-		} catch (e) {
-			return { successful: false, error: e?.message };
-		}
-	};
+const col = new FirebaseCollection<AcademicDetail>("AcademicDetails");
 
-	static addAcademicDetail = async (data: AcademicDetail): Promise<OperationResult<any>> => {
-		try {
-			await AcademicDetailService.academicDetailCollection
-				.doc(data.id)
-				.set(data);
-			return { successful: true}
-		}
-		catch (e) {
-			return { successful: false, error: "Failed to add academic data." }
-		}
-
+export default class AcademicDetailService extends FirebaseCollection<AcademicDetail> {
+	/**
+	 *
+	 */
+	constructor() {
+		super("AcademicDetails");
+		
 	}
+	
 }
 
 // const data: AcademicDetail = {
 // 	id: "17EGJCS162@gitjaipur.com",
 // 	graduation: {
-// 		course: 'B.Tech',
+// 		course: 'MARCH',
 // 		rollNumber: '17EGJCS161',
 // 		batch: { passingYear: 2021, startingYear: 2017 },
 // 		department: 'CSE',
@@ -56,6 +35,7 @@ export default class AcademicDetailService {
 // 	academicGap: 1
 // }
 
+// col.update(data,"17EGJCS162@gitjaipur.com").then(i=>console.log(i));
 
 // AcademicDetailService.addAcademicDetail(data).then((i) => {
 // 	console.log(i);
