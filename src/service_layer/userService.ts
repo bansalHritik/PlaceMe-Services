@@ -1,18 +1,24 @@
 import { User } from "../modals";
 import { collection, OperationResult } from "./common";
-import { firebase } from '../firebase';
+import { firebase } from "../firebase";
 
 export default class UserService {
 	private static userCollection = collection<User>("Users");
 
-	static getUserDetail = async (id: string): Promise<OperationResult<User>> => {
+	static getFirebaseUser = (): firebase.User | null => {
+		return firebase.auth().currentUser;
+	};
+
+	static getUserDetail = async (
+		id: string
+	): Promise<OperationResult<User>> => {
 		try {
 			const userRef = await UserService.userCollection.doc(id).get();
 			if (!userRef.exists) {
 				throw Error("User not found.");
 			}
-			const data = await userRef.data();
-			return { data, successful: true };
+			const result = userRef.data();
+			return {successful: true, result};
 		} catch (e) {
 			return { successful: false, error: e?.message };
 		}
@@ -34,26 +40,40 @@ export default class UserService {
 		}
 	};
 
-	static loginUser = async (email: string, password: string): Promise<OperationResult<firebase.User>> => {
+	static loginUser = async (
+		email: string,
+		password: string
+	): Promise<OperationResult<User>> => {
 		try {
 			const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
-			return { successful: true, data: user }
+			return UserService.getUserDetail(email);
+		} catch (error) {
+			return { successful: false, error: error?.message };
+		}
+	};
+
+	static signupUser = async (
+		user: User,
+		password: string
+	): Promise<OperationResult<User>> => {
+		try {
+			await firebase.auth().createUserWithEmailAndPassword(user.email, password);
+			await UserService.userCollection.doc(user.email).set(user);
+			return { successful: true, result: user };
+		} catch (error) {
+			return { successful: false, error: error?.message };
+		}
+	};
+
+	static logout = async (): Promise<OperationResult<undefined>> => {
+		try {
+			await firebase.auth().signOut();
+			return { successful: true };
 		}
 		catch (error) {
-			return { successful: false, error: error?.message }
+			return {successful: false, error}
 		}
 	}
 
-	static signupUser = async (email: string, password: string, user: User): Promise<OperationResult<User>> => {
-		try {
-			await firebase.auth().createUserWithEmailAndPassword(email, password);
-			const firebaseUser = firebase.auth().currentUser;
-			await UserService.userCollection.doc(email).set(user);
-			return { successful: true }
-		} catch (error) {
-			return { successful: false, error: error?.message }
-		}
-	}
+	static firebaseRef = firebase;
 }
-
-//https://stackoverflow.com/questions/54465851/using-js-and-ts-in-a-react-project

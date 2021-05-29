@@ -1,5 +1,5 @@
 export default interface OperationResult<T> {
-	data?: T | null;
+	result?: T | null;
 	successful: boolean;
 	error?: string | undefined;
 }
