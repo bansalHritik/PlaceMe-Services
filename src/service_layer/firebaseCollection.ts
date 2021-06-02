@@ -1,22 +1,20 @@
-import { collection as firebaseCollection, OperationResult } from "./common";
+import { collection as firebaseCollection, OperationResult, Result } from "./common";
 import { firebase } from "../firebase";
 
-interface Result<T> {
-	data?: T;
-	id?: string;
-}
-export default class FirebaseCollection<T> {
-	private collection: firebase.firestore.CollectionReference<T>;
 
+export default class FirebaseCollection<T> {
+	protected collection: firebase.firestore.CollectionReference<T>;
+	protected lastDoc: firebase.firestore.DocumentSnapshot<T> | null
 	constructor(name: string) {
 		this.collection = firebaseCollection<T>(name);
+		this.lastDoc = null;
 	}
 
-	private successResult(result?: Result<T>): OperationResult<Result<T>> {
+	protected successResult(result?: Result<T>): OperationResult<Result<T>> {
 		return { successful: true, result };
 	}
 
-	private failureResult(error?: string): OperationResult<T> {
+	protected failureResult(error?: string): OperationResult<T> {
 		return { successful: false, error };
 	}
 
@@ -31,6 +29,7 @@ export default class FirebaseCollection<T> {
 
 	public async add(data: T): Promise<OperationResult<Result<T>>> {
 		try {
+			console.log("Data in add", data)
 			const { id } = await this.collection.add(data);
 			return this.successResult({ ...data, id });
 		} catch (error) {
@@ -66,7 +65,7 @@ export default class FirebaseCollection<T> {
 				throw new Error("No document found with this id.");
 			}
 			const result = doc.data();
-			return this.successResult({ data: result, id: doc.id});
+			return this.successResult({ data: result, id: doc.id });
 		} catch (error) {
 			return this.failureResult(error);
 		}
@@ -75,6 +74,25 @@ export default class FirebaseCollection<T> {
 	public async getAll(): Promise<OperationResult<Result<T>[]>> {
 		try {
 			const { docs } = await this.collection.get();
+			const result: Result<T>[] = [];
+			docs.forEach((doc) => {
+				const { id } = doc;
+				const data = doc.data();
+				result.push({ data, id });
+			});
+			return { successful: true, result: result };
+		} catch (error) {
+			return { successful: false, error };
+		}
+	}
+
+	public async getNext(pageSize: number, orderBy: string): Promise<OperationResult<Result<T>[]>> {
+		try {
+			const { docs } = await this.collection
+				.orderBy(orderBy)
+				.limit(pageSize)
+				.startAfter(this.lastDoc)
+				.get();
 			const result: Result<T>[] = [];
 			docs.forEach((doc) => {
 				const { id } = doc;

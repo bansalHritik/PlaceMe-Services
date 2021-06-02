@@ -11,6 +11,6 @@ export default interface PersonalDetail {
     dob: Date,
     email: string,
     emergencyContact: number,
-    fatherDetails: FatherDetail,
-    motherDetails: MotherDetail,
+    father: FatherDetail,
+    mother: MotherDetail,
 };
