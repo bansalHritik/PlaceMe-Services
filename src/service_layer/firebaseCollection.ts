@@ -29,7 +29,6 @@ export default class FirebaseCollection<T> {
 
 	public async add(data: T): Promise<OperationResult<Result<T>>> {
 		try {
-			console.log("Data in add", data)
 			const { id } = await this.collection.add(data);
 			return this.successResult({ ...data, id });
 		} catch (error) {

@@ -1,5 +1,4 @@
 import { AcademicDetail } from "./../modals";
-import { collection, OperationResult } from "./common";
 import FirebaseCollection  from './firebaseCollection'
 
 

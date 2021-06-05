@@ -10,3 +10,4 @@ export { default as PersonalDetailService } from "./personalDetailService";
 export { default as PlacedStudentService } from "./placedStudentService";
 export { default as StudentService } from "./studentService";
 export { default as UserService } from "./userService";
+export { default as DocumentUpdateService } from "./documentUpdateService";
