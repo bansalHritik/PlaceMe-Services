@@ -1,8 +1,11 @@
 import PendingRequest from "./pendingRequest";
 
+import { firebase } from "../../firebase";
 export default interface CompletedRequest extends PendingRequest {
 	isAccepted: boolean;
-	message: string;
+	message?: string;
 	verifiedBy: string;
-	verifiedOn?: Date;
+	verifiedOn: firebase.firestore.Timestamp;
+	title: string,
+	comment?: string
 }

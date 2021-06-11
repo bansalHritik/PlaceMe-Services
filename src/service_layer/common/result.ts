@@ -1,5 +1,8 @@
 
-export default interface Result<T> {
+export default interface Result<T> extends ResultWithId {
 	data?: T;
-	id?: string;
+}
+
+export interface ResultWithId {
+	id?: string
 }

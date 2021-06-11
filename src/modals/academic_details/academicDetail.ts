@@ -8,5 +8,5 @@ export default interface AcademicDetail {
 	seniorSecondary: SeniorSecondary;
 	graduation: Graduation;
 	academicGap: number;
-	docsAndCertificates: [DocsAndCertificates];
+	docsAndCertificates: DocsAndCertificates[];
 };

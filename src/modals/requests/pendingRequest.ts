@@ -35,16 +35,34 @@ export interface PersonalDetailsUpdates {
 export interface DocumentsUpdates {
 	title: string;
 	doc: File;
+	type: DocumentType
 }
+
+
 export default interface PendingRequest {
 	requestedOn?: Date;
-	studentEmail?: string | undefined | null;
+	studentEmail: string;
 	updatesRequired: AcademicDetailsUpdates | PersonalDetailsUpdates | DocumentsUpdates;
-	type: UpdateRequestType;
+	type: "ACADEMICS" | "PERSONAL" | "DOCUMENT";
+	title: string,
+	comment?: string
 }
 
 enum UpdateRequestType {
 	ACADEMICS = "ACADEMICS",
 	PERSONAL = "PERSONAL",
 	DOCUMENT = "DOCUMENT",
+}
+
+enum DocumentType {
+	SENIORSECONDARY = "ACADEMICS",
+	SECONDARY = "PERSONAL",
+	GRADUATION1MARKSHEET = "GRADUATION1MARKSHEET",
+	GRADUATION2MARKSHEET = "GRADUATION2MARKSHEET",
+	GRADUATION3MARKSHEET = "GRADUATION3MARKSHEET",
+	GRADUATION4MARKSHEET = "GRADUATION4MARKSHEET",
+	GRADUATION5MARKSHEET = "GRADUATION5MARKSHEET",
+	GRADUATION6MARKSHEET = "GRADUATION6MARKSHEET",
+	GRADUATION7MARKSHEET = "GRADUATION7MARKSHEET",
+	GRADUATION8MARKSHEET = "GRADUATION8MARKSHEET",
 }

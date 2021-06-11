@@ -1,17 +1,9 @@
 import { PlacedStudent } from '../modals';
+import { Collection } from './common';
 import FirebaseCollection from './firebaseCollection';
 
 export default class PlacedStudentService extends FirebaseCollection<PlacedStudent> {
 	constructor() {
-		super("PlacedStudents");
+		super(Collection.PLACED_STUDENTS);
 	}
 }
-
-
-
-// PlacedStudentService.placedStudentCollection.get().then((i)=>{
-// 		i.forEach((j) =>  console.log(j.id,"---->",j.data()))
-// 	})
-// PlacedStudentService.getPlacedStudentDetail('cDPO96sVbzw4lrR0egzF').then((i)=>{
-// 	console.log(i);
-// })

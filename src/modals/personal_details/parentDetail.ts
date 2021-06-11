@@ -1,5 +1,5 @@
 export default interface ParentDetail {
     name: string
-    mobile: number
+    mobile: string
     occupation: number
 };

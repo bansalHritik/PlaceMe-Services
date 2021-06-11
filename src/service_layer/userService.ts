@@ -1,9 +1,9 @@
 import { User } from "../modals";
-import { collection, OperationResult } from "./common";
+import { Collection, collection, OperationResult } from "./common";
 import { firebase } from "../firebase";
 
 export default class UserService {
-	private static userCollection = collection<User>("Users");
+	private static userCollection = collection<User>(Collection.USERS);
 
 	static getFirebaseUser = (): firebase.User | null => {
 		return firebase.auth().currentUser;
@@ -18,7 +18,7 @@ export default class UserService {
 				throw Error("User not found.");
 			}
 			const result = userRef.data();
-			return {successful: true, result};
+			return { successful: true, result };
 		} catch (e) {
 			return { successful: false, error: e?.message };
 		}
@@ -71,7 +71,7 @@ export default class UserService {
 			return { successful: true };
 		}
 		catch (error) {
-			return {successful: false, error}
+			return { successful: false, error }
 		}
 	}
 
