@@ -12,6 +12,7 @@ import {
 	MotherDetail,
 } from "../personal_details";
 import { BloodGroup } from "../../utils";
+import { firebase } from './../../firebase'
 
 export interface AcademicDetailsUpdates {
 	secondary?: Secondary;
@@ -25,7 +26,7 @@ export interface PersonalDetailsUpdates {
 	aadhar?: Aadhar;
 	address?: Address;
 	bloodGroup?: BloodGroup;
-	dob?: Date;
+	dob?: Date | firebase.firestore.Timestamp;
 	email?: string;
 	emergencyContact?: number;
 	father?: FatherDetail;

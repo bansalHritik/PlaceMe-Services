@@ -5,10 +5,33 @@ import { firebase } from '../firebase';
 import { AcademicDetailService, CompletedRequestService } from '.';
 import { map } from '../utils';
 import { ResultWithId } from './common/result';
+import { PersonalDetailsUpdates } from '../modals/requests/pendingRequest';
 
 export default class PendingRequestService extends FirebaseCollection<PendingRequest> {
 	constructor() {
 		super(Collection.PENDING_REQUESTS);
+	}
+
+	public async add(data: PendingRequest): Promise<OperationResult<Result<PendingRequest>>> {
+		const { type, updatesRequired } = data
+		console.log("Data recived in add", data);
+		switch (type) {
+			case 'PERSONAL': {
+				const updates = updatesRequired as PersonalDetailsUpdates;
+				console.log("Updates required", updates);
+
+				if (updates.dob) {
+					updates.dob = firebase.firestore.Timestamp.fromDate(updates.dob as Date);
+				}
+
+				console.log("After updaing", updates)
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+		return super.add(data);
 	}
 
 	public async update(data: PendingRequest, id: string): Promise<OperationResult<ResultWithId>> {
@@ -21,7 +44,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 		}
 	}
 
-	public async getPendingRequestsOf(userId: string): Promise<OperationResult<Result<PendingRequest>[]>> {
+	private async getPendingRequestsOf(userId: string): Promise<OperationResult<Result<PendingRequest>[]>> {
 		try {
 			const { docs } = await this.collection.where('studentEmail', '==', userId).get();
 			let resultDocuments: Result<PendingRequest>[] = [];
@@ -41,7 +64,6 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 
 	public async approveRequest(id: string): Promise<OperationResult<undefined>> {
 		try {
-
 			const db = firebase.firestore();
 			//getting pending request with given id.
 			const pendingRequestRef = db
@@ -58,7 +80,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 				const pendingRequestDoc = await transaction.get(pendingRequestRef);
 				if (pendingRequestDoc.exists) {
 					const pendingRequestData = pendingRequestDoc.data()!;
-					const { updatesRequired } = pendingRequestData
+					const { updatesRequired } = pendingRequestData;
 					const studentEmail = pendingRequestData.studentEmail;
 
 					switch (pendingRequestData.type) {
@@ -103,6 +125,49 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 					// adding new document in the completedRequest collection
 					let completedRequestData: CompletedRequest = {
 						isAccepted: true,
+						studentEmail,
+						title: pendingRequestData.title,
+						type: pendingRequestData.type,
+						updatesRequired: pendingRequestData.updatesRequired,
+						requestedOn: pendingRequestData.requestedOn,
+						verifiedBy: firebase.auth().currentUser?.email!,
+						verifiedOn: firebase.firestore.Timestamp.now(),
+					};
+					transaction.set(completedRequestRef.doc(), completedRequestData);
+					transaction.delete(pendingRequestRef);
+				}
+				else {
+					throw new Error("No pending request with this id.")
+				}
+			});
+			return { successful: true, }
+		} catch (error) {
+			return { successful: false, error };
+		}
+	}
+
+	public async rejectRequest(id: string): Promise<OperationResult<undefined>> {
+		try {
+			const db = firebase.firestore();
+			//getting pending request with given id.
+			const pendingRequestRef = db
+				.collection(Collection.PENDING_REQUESTS)
+				.withConverter(converter<PendingRequest>())
+				.doc(id);
+			// getting ref to completed request
+			const completedRequestRef = db
+				.collection(Collection.COMPLETED_REQUESTS)
+				.withConverter(converter<CompletedRequest>());
+
+			db.runTransaction(async (transaction) => {
+				// get the pending request data
+				const pendingRequestDoc = await transaction.get(pendingRequestRef);
+				if (pendingRequestDoc.exists) {
+					const pendingRequestData = pendingRequestDoc.data()!;
+					const studentEmail = pendingRequestData.studentEmail;
+					// adding new document in the completedRequest collection
+					let completedRequestData: CompletedRequest = {
+						isAccepted: false,
 						studentEmail,
 						title: pendingRequestData.title,
 						type: pendingRequestData.type,
