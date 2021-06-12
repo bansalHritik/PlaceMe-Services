@@ -14,17 +14,15 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 
 	public async add(data: PendingRequest): Promise<OperationResult<Result<PendingRequest>>> {
 		const { type, updatesRequired } = data
-		console.log("Data recived in add", data);
 		switch (type) {
 			case 'PERSONAL': {
 				const updates = updatesRequired as PersonalDetailsUpdates;
-				console.log("Updates required", updates);
-
 				if (updates.dob) {
 					updates.dob = firebase.firestore.Timestamp.fromDate(updates.dob as Date);
 				}
-
-				console.log("After updaing", updates)
+				break;
+			}
+			case 'DOCUMENT': {
 				break;
 			}
 			default: {
