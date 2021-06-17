@@ -1,5 +1,5 @@
-export * from "./personal_details";
 export * from "./academic_details";
+export * from "./personal_details";
 export * from "./companies";
 export * from "./departments";
 export * from "./job_applications";

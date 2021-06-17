@@ -94,11 +94,10 @@ export default class FirebaseCollection<T> {
 				.get();
 			const result: Result<T>[] = [];
 			docs.forEach((doc) => {
-				const { id } = doc;
 				const data = doc.data();
-				result.push({ data, id });
+				result.push({ data, id: doc.id });
 			});
-			return { successful: true, result: result };
+			return { successful: true, result };
 		} catch (error) {
 			return { successful: false, error };
 		}

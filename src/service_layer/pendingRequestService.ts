@@ -2,10 +2,9 @@ import { AcademicDetail, CompletedRequest, PendingRequest, PersonalDetail } from
 import { OperationResult, Result, Collection, converter } from './common';
 import FirebaseCollection from './firebaseCollection';
 import { firebase } from '../firebase';
-import { AcademicDetailService, CompletedRequestService } from '.';
 import { map } from '../utils';
 import { ResultWithId } from './common/result';
-import { PersonalDetailsUpdates } from '../modals/requests/pendingRequest';
+import { PersonalDetailsUpdates, DocumentsUpdates } from '../modals';
 
 export default class PendingRequestService extends FirebaseCollection<PendingRequest> {
 	constructor() {
@@ -13,7 +12,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 	}
 
 	public async add(data: PendingRequest): Promise<OperationResult<Result<PendingRequest>>> {
-		const { type, updatesRequired } = data
+		const { type, updatesRequired, requestedOn } = data;
 		switch (type) {
 			case 'PERSONAL': {
 				const updates = updatesRequired as PersonalDetailsUpdates;
@@ -23,12 +22,28 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 				break;
 			}
 			case 'DOCUMENT': {
+				const { doc, title, type } = updatesRequired as DocumentsUpdates;
+				const studentEmail = firebase.auth().currentUser?.email!
+				const fullPath = `/PendingRequest/${studentEmail}/${new Date().toISOString()}/${title}`
+
+				await firebase.storage().ref(fullPath).put(doc);
+
+				const downloadURL = await firebase.storage().ref(fullPath).getDownloadURL();
+
+				data.studentEmail = studentEmail;
+				data.updatesRequired = {
+					doc: downloadURL,
+					title,
+					type,
+					path: fullPath,
+				}
 				break;
 			}
 			default: {
 				break;
 			}
-		}
+		};
+		data.requestedOn = requestedOn ?? firebase.firestore.Timestamp.fromDate(new Date());
 		return super.add(data);
 	}
 

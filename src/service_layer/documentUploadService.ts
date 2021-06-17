@@ -5,54 +5,41 @@ import { DocumentsUpdates } from '../modals/requests/pendingRequest'
 import { PendingRequestService } from ".";
 
 export default class DocumentUploadService {
-	private storageRef = firebase.storage().ref;
 	public async add(
 		data: DocumentsUpdates
 	): Promise<OperationResult<Result<PendingRequest>>> {
 		try {
-
 			const updateService = new PendingRequestService();
 			const { doc, title, type } = data;
-			const studentEmail = firebase.auth().currentUser?.email
-
+			const studentEmail = firebase.auth().currentUser?.email!
 			const date = new Date();
-
-			const fullPath =
-				"PendingRequest/" +
-				studentEmail +
-				"/" +
-				date.toISOString() +
-				"/" +
-				doc?.name;
+			const fullPath = `/PendingRequest/${studentEmail}/${date.toISOString()}/${title}`
 
 			await firebase.storage().ref(fullPath).put(doc);
 
-			const downloadURL = await this.storageRef(fullPath).getDownloadURL();
+			const downloadURL = await firebase.storage().ref(fullPath).getDownloadURL();
 
 			let updateData: PendingRequest = {
-				studentEmail: firebase.auth().currentUser?.email!,
+				studentEmail,
 				title,
 				updatesRequired: {
 					doc: downloadURL,
 					title,
 					type,
-
 				},
 				type: "DOCUMENT",
-				requestedOn: date
-
 			};
 
-			// data.requestedOn = date;
 			return await updateService.add(updateData);
 		} catch (error) {
+			console.log(error);
 			return { successful: false, error };
 		}
 	}
 
 	public async remove(path: string): Promise<OperationResult<Result<boolean>>> {
 		try {
-			await this.storageRef(path).delete();
+			await firebase.storage().ref(path).delete();
 			return { successful: true }
 		} catch (error) {
 			return { successful: false, error }

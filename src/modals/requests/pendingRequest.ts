@@ -37,12 +37,13 @@ export interface DocumentsUpdates {
 	title: string;
 	doc: File;
 	type: DocumentType
+	path?: string,
 }
 
 
-export default interface PendingRequest {
-	requestedOn?: Date;
-	studentEmail: string;
+export interface PendingRequest {
+	requestedOn?: firebase.firestore.Timestamp;
+	studentEmail?: string;
 	updatesRequired: AcademicDetailsUpdates | PersonalDetailsUpdates | DocumentsUpdates;
 	type: "ACADEMICS" | "PERSONAL" | "DOCUMENT";
 	title: string,

@@ -1,4 +1,4 @@
-import PendingRequest from "./pendingRequest";
+import { PendingRequest } from "./pendingRequest";
 
 import { firebase } from "../../firebase";
 export default interface CompletedRequest extends PendingRequest {
