@@ -25,8 +25,9 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 				const { doc, title, type } = updatesRequired as DocumentsUpdates;
 				const studentEmail = firebase.auth().currentUser?.email!
 				const fullPath = `/PendingRequest/${studentEmail}/${new Date().toISOString()}/${title}`
+				const file = doc as File
 
-				await firebase.storage().ref(fullPath).put(doc);
+				await firebase.storage().ref(fullPath).put(file);
 
 				const downloadURL = await firebase.storage().ref(fullPath).getDownloadURL();
 
@@ -130,6 +131,24 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 							else {
 								throw new Error(`Personal details corresponding ${studentEmail} not found.`)
 							}
+						}
+						case 'DOCUMENT': {
+							const { doc, title, type, path } = updatesRequired as DocumentsUpdates;
+							const adacdemicDetailDocRef = db
+								.collection(Collection.ACADEMIC_DETAIL)
+								.withConverter(converter<AcademicDetail>())
+								.doc(studentEmail)
+							const academicDataDoc = await transaction.get(adacdemicDetailDocRef);
+							const file = doc as string;
+							const academicData = academicDataDoc.data()!;
+							const date = firebase.firestore.Timestamp.fromDate(new Date());
+							if (academicData.docsAndCertificates) {
+								academicData.docsAndCertificates.push({ type, uploadedOn: date, path, title, url: file })
+							}
+							else {
+								academicData.docsAndCertificates = [{ type, uploadedOn: date, path, title, url: file }]
+							}
+							transaction.set(adacdemicDetailDocRef, academicData)
 						}
 						default:
 							break;

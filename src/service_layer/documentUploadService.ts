@@ -15,7 +15,8 @@ export default class DocumentUploadService {
 			const date = new Date();
 			const fullPath = `/PendingRequest/${studentEmail}/${date.toISOString()}/${title}`
 
-			await firebase.storage().ref(fullPath).put(doc);
+			const file = doc as File
+			await firebase.storage().ref(fullPath).put(file);
 
 			const downloadURL = await firebase.storage().ref(fullPath).getDownloadURL();
 

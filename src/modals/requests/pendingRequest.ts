@@ -1,5 +1,4 @@
 import {
-	AcademicDetail,
 	DocsAndCertificates,
 	Graduation,
 	Secondary,
@@ -11,7 +10,7 @@ import {
 	FatherDetail,
 	MotherDetail,
 } from "../personal_details";
-import { BloodGroup } from "../../utils";
+import { BloodGroup, DocumentType } from "../../utils";
 import { firebase } from './../../firebase'
 
 export interface AcademicDetailsUpdates {
@@ -19,7 +18,7 @@ export interface AcademicDetailsUpdates {
 	seniorSecondary?: SeniorSecondary;
 	graduation?: Graduation;
 	academicGap?: number;
-	docsAndCertificates?: [DocsAndCertificates];
+	docsAndCertificates?: DocsAndCertificates;
 }
 
 export interface PersonalDetailsUpdates {
@@ -35,9 +34,8 @@ export interface PersonalDetailsUpdates {
 
 export interface DocumentsUpdates {
 	title: string;
-	doc: File;
+	doc: File | string;
 	type: DocumentType
-	path?: string,
 }
 
 
@@ -54,17 +52,4 @@ enum UpdateRequestType {
 	ACADEMICS = "ACADEMICS",
 	PERSONAL = "PERSONAL",
 	DOCUMENT = "DOCUMENT",
-}
-
-enum DocumentType {
-	SENIORSECONDARY = "ACADEMICS",
-	SECONDARY = "PERSONAL",
-	GRADUATION1MARKSHEET = "GRADUATION1MARKSHEET",
-	GRADUATION2MARKSHEET = "GRADUATION2MARKSHEET",
-	GRADUATION3MARKSHEET = "GRADUATION3MARKSHEET",
-	GRADUATION4MARKSHEET = "GRADUATION4MARKSHEET",
-	GRADUATION5MARKSHEET = "GRADUATION5MARKSHEET",
-	GRADUATION6MARKSHEET = "GRADUATION6MARKSHEET",
-	GRADUATION7MARKSHEET = "GRADUATION7MARKSHEET",
-	GRADUATION8MARKSHEET = "GRADUATION8MARKSHEET",
 }
