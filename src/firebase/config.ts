@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from "firebase";
 
 let firebaseConfig = {
 	apiKey: "AIzaSyAtdUNcyEgyxl8mLF7tiwdSdwSnB1uxgiM",
@@ -12,7 +12,9 @@ let firebaseConfig = {
 
 if (!firebase.apps.length) {
 	firebase.initializeApp(firebaseConfig);
-	firebase.firestore().settings({ experimentalForceLongPolling: true, });
+	firebase.firestore().settings({
+		ignoreUndefinedProperties: true,
+	});
 
 	// firebase.analytics();
 }

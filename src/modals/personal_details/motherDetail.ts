@@ -1,3 +1,3 @@
-import ParentDetail from './parentDetail';
+import ParentDetail from "./parentDetail";
 
-export default interface MotherDetail extends ParentDetail { };
+export default interface MotherDetail extends ParentDetail {}

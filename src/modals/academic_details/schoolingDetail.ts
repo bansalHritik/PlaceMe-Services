@@ -1,6 +1,5 @@
 export default interface SchoolingDetail {
-	percentage: number,
-	markSheet?: string,
-	board: string,
-	schoolName: string
-};
+	percentage: number;
+	board: string;
+	schoolName: string;
+}

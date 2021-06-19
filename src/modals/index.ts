@@ -6,6 +6,5 @@ export * from "./job_applications";
 export * from "./jobs";
 export * from "./placed_students";
 export * from "./requests";
-export * from "./students";
 export * from "./users";
 export * from "./courses";

@@ -1,3 +1,3 @@
 import SchoolingDetail from "./schoolingDetail";
 
-export default interface SeniorSecondary extends SchoolingDetail { }
+export default interface SeniorSecondary extends SchoolingDetail {}

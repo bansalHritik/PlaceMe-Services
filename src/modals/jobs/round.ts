@@ -1,5 +1,4 @@
 export default interface Round {
-    name: string,
-    description: string
-};
-
+	name: string;
+	description: string;
+}

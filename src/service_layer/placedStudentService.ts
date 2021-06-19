@@ -1,6 +1,6 @@
-import { PlacedStudent } from '../modals';
-import { Collection } from './common';
-import FirebaseCollection from './firebaseCollection';
+import { PlacedStudent } from "../modals";
+import { Collection } from "./common";
+import FirebaseCollection from "./firebaseCollection";
 
 export default class PlacedStudentService extends FirebaseCollection<PlacedStudent> {
 	constructor() {

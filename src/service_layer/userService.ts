@@ -9,9 +9,7 @@ export default class UserService {
 		return firebase.auth().currentUser;
 	};
 
-	static getUserDetail = async (
-		id: string
-	): Promise<OperationResult<User>> => {
+	static getUserDetail = async (id: string): Promise<OperationResult<User>> => {
 		try {
 			const userRef = await UserService.userCollection.doc(id).get();
 			if (!userRef.exists) {
@@ -45,7 +43,9 @@ export default class UserService {
 		password: string
 	): Promise<OperationResult<User>> => {
 		try {
-			const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
+			const { user } = await firebase
+				.auth()
+				.signInWithEmailAndPassword(email, password);
 			return UserService.getUserDetail(email);
 		} catch (error) {
 			return { successful: false, error: error?.message };
@@ -57,7 +57,9 @@ export default class UserService {
 		password: string
 	): Promise<OperationResult<User>> => {
 		try {
-			await firebase.auth().createUserWithEmailAndPassword(user.email, password);
+			await firebase
+				.auth()
+				.createUserWithEmailAndPassword(user.email, password);
 			await UserService.userCollection.doc(user.email).set(user);
 			return { successful: true, result: user };
 		} catch (error) {
@@ -69,11 +71,10 @@ export default class UserService {
 		try {
 			await firebase.auth().signOut();
 			return { successful: true };
+		} catch (error) {
+			return { successful: false, error };
 		}
-		catch (error) {
-			return { successful: false, error }
-		}
-	}
+	};
 
 	static firebaseRef = firebase;
 }

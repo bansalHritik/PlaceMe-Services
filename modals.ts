@@ -1,1 +1,1 @@
-export * from './src/modals'
+export * from "./src/modals";

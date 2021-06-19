@@ -9,4 +9,4 @@ export default interface AcademicDetail {
 	graduation: Graduation;
 	academicGap: number;
 	docsAndCertificates: DocsAndCertificates[];
-};
+}

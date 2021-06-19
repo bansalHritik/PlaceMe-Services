@@ -6,4 +6,5 @@ enum Role {
 	TPO,
 	HTOP,
 }
+
 export default Role;

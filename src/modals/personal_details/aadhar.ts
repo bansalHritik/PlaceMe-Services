@@ -1,4 +1,4 @@
 export default interface Aadhar {
-	number: number,
-	url: string
-};
+	number: number;
+	url: string;
+}

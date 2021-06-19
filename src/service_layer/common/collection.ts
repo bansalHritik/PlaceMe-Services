@@ -19,8 +19,7 @@ export const Collection = {
 	PENDING_REQUESTS: "PendingRequests",
 	PERSONAL_DETAIL: "PersonalDetails",
 	PLACED_STUDENTS: "PlacedStudents",
-	STUDENTS: "Students",
-	USERS: "Users"
+	USERS: "Users",
 };
 
 export default collection;

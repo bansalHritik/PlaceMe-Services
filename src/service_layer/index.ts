@@ -8,6 +8,4 @@ export { default as JobService } from "./jobService";
 export { default as PendingRequestService } from "./pendingRequestService";
 export { default as PersonalDetailService } from "./personalDetailService";
 export { default as PlacedStudentService } from "./placedStudentService";
-export { default as StudentService } from "./studentService";
 export { default as UserService } from "./userService";
-export { default as DocumentUploadService } from "./documentUploadService";

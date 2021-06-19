@@ -1,4 +1,4 @@
 export default interface Faculty {
-  email: string,
-  studentAssigned: string[]
+	email: string;
+	studentAssigned: string[];
 }

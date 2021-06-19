@@ -1,4 +1,4 @@
 export default interface Batch {
-	startingYear: number,
-	passingYear: number,
-};
+	startingYear: number;
+	passingYear: number;
+}

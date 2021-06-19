@@ -1,9 +1,9 @@
-import { firebase } from '../../firebase'
-import { DocumentType } from '../../utils/common/documentTypes';
+import { DocumentType, Timestamp } from "../../utils";
 export default interface DocsAndCertificates {
-    title: string,
-    path: string,
-    url: string
-    uploadedOn: firebase.firestore.Timestamp,
-    type: DocumentType
+	title: string;
+	path: string;
+	url: string;
+	uploadedOn: Timestamp;
+	type: DocumentType;
+	file?: File;
 }

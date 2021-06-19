@@ -1,10 +1,13 @@
-import { collection as firebaseCollection, OperationResult, Result } from "./common";
+import {
+	collection as firebaseCollection,
+	OperationResult,
+	Result,
+} from "./common";
 import { firebase } from "../firebase";
-
 
 export default class FirebaseCollection<T> {
 	protected collection: firebase.firestore.CollectionReference<T>;
-	protected lastDoc: firebase.firestore.DocumentSnapshot<T> | null
+	protected lastDoc: firebase.firestore.DocumentSnapshot<T> | null;
 	constructor(name: string) {
 		this.collection = firebaseCollection<T>(name);
 		this.lastDoc = null;
@@ -85,7 +88,10 @@ export default class FirebaseCollection<T> {
 		}
 	}
 
-	public async getNext(pageSize: number, orderBy: string): Promise<OperationResult<Result<T>[]>> {
+	public async getNext(
+		pageSize: number,
+		orderBy: string
+	): Promise<OperationResult<Result<T>[]>> {
 		try {
 			const { docs } = await this.collection
 				.orderBy(orderBy)
