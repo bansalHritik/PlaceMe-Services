@@ -1,5 +1,6 @@
 import { User } from "../modals";
 import { Collection, collection, OperationResult } from "./common";
+import { uploadFile } from './storageService'
 import { firebase } from "../firebase";
 
 export default class UserService {
@@ -75,6 +76,40 @@ export default class UserService {
 			return { successful: false, error };
 		}
 	};
+	static async sendResetPasswordMail(email: string): Promise<OperationResult<undefined>> {
+		try {
+			await firebase.auth().sendPasswordResetEmail(email)
+			return { successful: true }
+		} catch (error) {
+			return { successful: false, error }
+		}
+	}
+
+	static async resetPassword(currentPassword: string, newPassword: string): Promise<OperationResult<undefined>> {
+		try {
+			const currentUser = firebase.auth().currentUser!;
+			const email = currentUser.email!;
+			const cred = firebase.auth.EmailAuthProvider
+				.credential(email, currentPassword);
+			currentUser.reauthenticateWithCredential(cred);
+			return { successful: true }
+		} catch (error) {
+			return { successful: false, error }
+		}
+	}
+
+	static async updateProfilePic(profilePic: File): Promise<OperationResult<undefined>> {
+		try {
+			const currentUser = firebase.auth().currentUser;
+			const email = currentUser?.email!;
+			const path = `USERS/PROFILE/${email}`;
+			const url = await uploadFile(profilePic, path);
+			await currentUser?.updateProfile({ photoURL: url });
+			return { successful: true }
+		} catch (error) {
+			return { successful: false, error }
+		}
+	}
 
 	static firebaseRef = firebase;
 }
