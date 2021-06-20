@@ -1,10 +1,17 @@
-import { DeepPartial, Timestamp, UpdateRequestType } from "../../utils";
-import { AcademicDetail, DocsAndCertificates } from "../academic_details";
+import { DeepPartial, DocumentType, Timestamp, UpdateRequestType } from "../../utils";
+import { AcademicDetail } from "../academic_details";
 import { PersonalDetail } from "../personal_details";
 
 export type AcademicDetailUpdate = DeepPartial<AcademicDetail>;
 export type PersonalDetailUpdate = DeepPartial<PersonalDetail>;
-export type DocumentUpdate = DeepPartial<DocsAndCertificates>;
+export type DocumentUpdate = {
+	file?: File,
+	title: string,
+	type: DocumentType
+	url?: string,
+	path?: string,
+	uploadedOn: Timestamp
+};
 export interface PendingRequest {
 	requestedOn?: Timestamp;
 	studentEmail?: string;

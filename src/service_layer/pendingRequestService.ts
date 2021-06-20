@@ -10,6 +10,7 @@ import FirebaseCollection from "./firebaseCollection";
 import { firebase } from "../firebase";
 import { map, Timestamp } from "../utils";
 import { PersonalDetailUpdate, DocumentUpdate } from "../modals";
+import { uploadFile } from "./storageService";
 
 export default class PendingRequestService extends FirebaseCollection<PendingRequest> {
 	constructor() {
@@ -36,27 +37,22 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 				break;
 			}
 			case "DOCUMENT": {
-				const { file, title, type } = updatesRequired as DocumentUpdate;
+				const docUpdates = updatesRequired as DocumentUpdate;
+				const { title, file } = docUpdates
 				const fullPath = `/PendingRequest/${studentEmail}/${currentDate.toISOString()}/${title}`;
 
-				await firebase
-					.storage()
-					.ref(fullPath)
-					.put(file as File);
+				const downloadURL = await uploadFile(file!, fullPath);
 
-				const downloadURL = await firebase
-					.storage()
-					.ref(fullPath)
-					.getDownloadURL();
-
-				data.updatesRequired = {
-					url: downloadURL,
-					title,
-					type,
-					path: fullPath,
+				const updates: DocumentUpdate = {
+					...docUpdates,
 					uploadedOn: currentTimestamp,
-				};
-				delete data.updatesRequired.file;
+					url: downloadURL,
+					path: fullPath,
+				}
+				delete updates.file;
+
+				data.updatesRequired = updates;
+
 				break;
 			}
 			default: {
