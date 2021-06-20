@@ -34,4 +34,24 @@ export default class JobApplicationService extends FirebaseCollection<JobApplica
 			return { successful: false, error };
 		}
 	}
+
+	public async getAllApplicationsOfCurrentUser(): Promise<OperationResult<Result<JobApplication>[]>> {
+		const currentUserEmail = firebase.auth().currentUser?.email!;
+		return this.getApplicationsOf(currentUserEmail);
+	}
+
+	public async getApplicationsOf(userId: string): Promise<OperationResult<Result<JobApplication>[]>> {
+		try {
+			const result: Result<JobApplication>[] = [];
+			const { docs } = await this.collection
+				.where("studentEmail", "==", userId)
+				.get();
+			docs.forEach(doc => {
+				result.push({ data: doc.data(), id: doc.id })
+			})
+			return { successful: true, result }
+		} catch (error) {
+			return { successful: false, error }
+		}
+	}
 }
