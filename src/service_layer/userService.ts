@@ -44,10 +44,20 @@ export default class UserService {
 		password: string
 	): Promise<OperationResult<User>> => {
 		try {
+			let currentUser: User;
+			const userEmail = email.toLowerCase();
 			const { user } = await firebase
 				.auth()
-				.signInWithEmailAndPassword(email, password);
-			return UserService.getUserDetail(email);
+				.signInWithEmailAndPassword(userEmail, password);
+			const { successful, error, result } = await UserService
+				.getUserDetail(userEmail);
+			if (successful) {
+				currentUser = { ...result!, photoUrl: user?.photoURL! }
+			}
+			else {
+				throw Error(error);
+			}
+			return { successful: true, result: currentUser }
 		} catch (error) {
 			return { successful: false, error: error?.message };
 		}
@@ -58,10 +68,11 @@ export default class UserService {
 		password: string
 	): Promise<OperationResult<User>> => {
 		try {
+			const userEmail = user.email.toLowerCase();
 			await firebase
 				.auth()
-				.createUserWithEmailAndPassword(user.email, password);
-			await UserService.userCollection.doc(user.email).set(user);
+				.createUserWithEmailAndPassword(userEmail, password);
+			await UserService.userCollection.doc(userEmail).set(user);
 			return { successful: true, result: user };
 		} catch (error) {
 			return { successful: false, error: error?.message };
@@ -91,7 +102,8 @@ export default class UserService {
 			const email = currentUser.email!;
 			const cred = firebase.auth.EmailAuthProvider
 				.credential(email, currentPassword);
-			currentUser.reauthenticateWithCredential(cred);
+			await currentUser.reauthenticateWithCredential(cred);
+			currentUser.updatePassword(newPassword);
 			return { successful: true }
 		} catch (error) {
 			return { successful: false, error }
@@ -110,6 +122,8 @@ export default class UserService {
 			return { successful: false, error }
 		}
 	}
+
+
 
 	static firebaseRef = firebase;
 }
