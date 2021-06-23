@@ -51,12 +51,12 @@ export default class FirebaseCollection<T> {
 		}
 	}
 
-	public async remove(id: string): Promise<OperationResult<Result<T>>> {
+	public async remove(id: string): Promise<OperationResult<undefined>> {
 		try {
 			await this.collection.doc(id).delete();
-			return this.successResult();
+			return { successful: true };
 		} catch (error) {
-			return this.failureResult(error);
+			return { successful: false, error };
 		}
 	}
 
