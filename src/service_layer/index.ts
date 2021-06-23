@@ -1,7 +1,6 @@
 export { default as AcademicDetailService } from "./academicDetailService";
 export { default as CompanyService } from "./companyService";
 export { default as CompletedRequestService } from "./completedRequestService";
-export { default as CourseService } from "./courseService";
 export { default as DeptarmentService } from "./departmentService";
 export { default as JobApplicationService } from "./jobApplicationService";
 export { default as JobService } from "./jobService";

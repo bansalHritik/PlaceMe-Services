@@ -7,4 +7,3 @@ export * from "./jobs";
 export * from "./placed_students";
 export * from "./requests";
 export * from "./users";
-export * from "./courses";

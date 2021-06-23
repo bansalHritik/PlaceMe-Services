@@ -6,5 +6,4 @@ export default interface Graduation {
 	semesters: SemesterDetail[];
 	batch: Batch;
 	department: string;
-	course: string;
 }

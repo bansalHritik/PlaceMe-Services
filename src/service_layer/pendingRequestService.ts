@@ -38,7 +38,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 			}
 			case "DOCUMENT": {
 				const docUpdates = updatesRequired as DocumentUpdate;
-				const { title, file } = docUpdates
+				const { title, file } = docUpdates;
 				const fullPath = `/PendingRequest/${studentEmail}/${currentDate.toISOString()}/${title}`;
 
 				const downloadURL = await uploadFile(file!, fullPath);
@@ -48,7 +48,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 					uploadedOn: currentTimestamp,
 					url: downloadURL,
 					path: fullPath,
-				}
+				};
 				delete updates.file;
 
 				data.updatesRequired = updates;
@@ -112,7 +112,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 					const pendingRequestData = pendingRequestDoc.data()!;
 					const { updatesRequired, type } = pendingRequestData;
 					const studentEmail = pendingRequestData.studentEmail;
-
+					console.log("1      Pending request ddata", pendingRequestData);
 					switch (type) {
 						case "ACADEMICS": {
 							const academicDetailDocRef = db
@@ -145,16 +145,21 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 							const personalDetailsDoc = await transaction.get(
 								personalDetailsRef
 							);
+							console.log("Personal Data", personalDetailsDoc);
 
 							if (personalDetailsDoc.exists) {
 								const personalDetailsData = personalDetailsDoc.data();
 								map(updatesRequired, personalDetailsData);
+								console.log("Personal Data after map", personalDetailsData);
+
 								transaction.set(personalDetailsRef, personalDetailsData);
+								console.log("set personal complete");
 							} else {
 								throw new Error(
 									`Personal details corresponding ${studentEmail} not found.`
 								);
 							}
+							break;
 						}
 						case "DOCUMENT": {
 							const { title, type, path, uploadedOn, url } =
@@ -183,6 +188,7 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 								academicData.docsAndCertificates = [newDocument];
 							}
 							transaction.set(academicDetailDocRef, academicData);
+							break;
 						}
 						default:
 							break;

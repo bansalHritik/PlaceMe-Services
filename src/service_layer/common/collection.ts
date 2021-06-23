@@ -12,7 +12,6 @@ export const Collection = {
 	ACADEMIC_DETAIL: "AcademicDetails",
 	COMPANIES: "Companies",
 	COMPLETED_REQUESTS: "CompletedRequests",
-	COURSES: "Courses",
 	DEPARTMENTS: "Departments",
 	JOB_APPLICATIONS: "JobApplications",
 	JOBS: "Jobs",
