@@ -8,9 +8,9 @@ import {
 import { OperationResult, Result, Collection, converter } from "./common";
 import FirebaseCollection from "./firebaseCollection";
 import { firebase } from "../firebase";
-import { map, Timestamp } from "../utils";
+import { map, Timestamp, UpdateRequestType } from "../utils";
 import { PersonalDetailUpdate, DocumentUpdate } from "../modals";
-import { uploadFile } from "./storageService";
+import { deleteFile, uploadFile } from "./storageService";
 
 export default class PendingRequestService extends FirebaseCollection<PendingRequest> {
 	constructor() {
@@ -254,6 +254,28 @@ export default class PendingRequestService extends FirebaseCollection<PendingReq
 			return { successful: true };
 		} catch (error) {
 			return { successful: false, error };
+		}
+	}
+
+	public async remove(id: string): Promise<OperationResult<undefined>> {
+		try {
+			const { successful, result } = await this.get(id);
+			if (successful) {
+				const { data: { updatesRequired, type } = {} } = result!;
+				switch (type) {
+					case UpdateRequestType.DOCUMENT: {
+						const updates = updatesRequired as DocumentUpdate;
+						const { path } = { ...updates }
+						await deleteFile(path!);
+					}
+					default:
+						break;
+				}
+			}
+			await super.remove(id);
+			return { successful: true }
+		} catch (error) {
+			return { successful: false }
 		}
 	}
 }
