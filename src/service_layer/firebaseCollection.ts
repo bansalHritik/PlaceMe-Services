@@ -24,7 +24,7 @@ export default class FirebaseCollection<T> {
 	public async set(data: T, id: string): Promise<OperationResult<Result<T>>> {
 		try {
 			await this.collection.doc(id).set(data);
-			return this.successResult();
+			return this.successResult({ data, id });
 		} catch (error) {
 			return this.failureResult(error);
 		}
@@ -33,7 +33,7 @@ export default class FirebaseCollection<T> {
 	public async add(data: T): Promise<OperationResult<Result<T>>> {
 		try {
 			const { id } = await this.collection.add(data);
-			return this.successResult({ ...data, id });
+			return this.successResult({ data, id });
 		} catch (error) {
 			return this.failureResult(error);
 		}
@@ -45,7 +45,7 @@ export default class FirebaseCollection<T> {
 	): Promise<OperationResult<Result<T>>> {
 		try {
 			await this.collection.doc(id).update(data);
-			return this.successResult();
+			return this.get(id);
 		} catch (error) {
 			return this.failureResult(error);
 		}

@@ -1,6 +1,6 @@
 import { User } from "../modals";
 import { Collection, collection, OperationResult } from "./common";
-import { uploadFile } from './storageService'
+import { uploadFile } from "./storageService";
 import { firebase } from "../firebase";
 
 export default class UserService {
@@ -49,15 +49,15 @@ export default class UserService {
 			const { user } = await firebase
 				.auth()
 				.signInWithEmailAndPassword(userEmail, password);
-			const { successful, error, result } = await UserService
-				.getUserDetail(userEmail);
+			const { successful, error, result } = await UserService.getUserDetail(
+				userEmail
+			);
 			if (successful) {
-				currentUser = { ...result!, photoUrl: user?.photoURL! }
-			}
-			else {
+				currentUser = { ...result!, photoUrl: user?.photoURL! };
+			} else {
 				throw Error(error);
 			}
-			return { successful: true, result: currentUser }
+			return { successful: true, result: currentUser };
 		} catch (error) {
 			return { successful: false, error: error?.message };
 		}
@@ -69,9 +69,7 @@ export default class UserService {
 	): Promise<OperationResult<User>> => {
 		try {
 			const userEmail = user.email.toLowerCase();
-			await firebase
-				.auth()
-				.createUserWithEmailAndPassword(userEmail, password);
+			await firebase.auth().createUserWithEmailAndPassword(userEmail, password);
 			await UserService.userCollection.doc(userEmail).set(user);
 			return { successful: true, result: user };
 		} catch (error) {
@@ -87,43 +85,50 @@ export default class UserService {
 			return { successful: false, error };
 		}
 	};
-	static async sendResetPasswordMail(email: string): Promise<OperationResult<undefined>> {
+	static async sendResetPasswordMail(
+		email: string
+	): Promise<OperationResult<undefined>> {
 		try {
-			await firebase.auth().sendPasswordResetEmail(email)
-			return { successful: true }
+			await firebase.auth().sendPasswordResetEmail(email);
+			return { successful: true };
 		} catch (error) {
-			return { successful: false, error }
+			return { successful: false, error };
 		}
 	}
 
-	static async resetPassword(currentPassword: string, newPassword: string): Promise<OperationResult<undefined>> {
+	static async resetPassword(
+		currentPassword: string,
+		newPassword: string
+	): Promise<OperationResult<undefined>> {
 		try {
 			const currentUser = firebase.auth().currentUser!;
 			const email = currentUser.email!;
-			const cred = firebase.auth.EmailAuthProvider
-				.credential(email, currentPassword);
+			const cred = firebase.auth.EmailAuthProvider.credential(
+				email,
+				currentPassword
+			);
 			await currentUser.reauthenticateWithCredential(cred);
 			currentUser.updatePassword(newPassword);
-			return { successful: true }
+			return { successful: true };
 		} catch (error) {
-			return { successful: false, error }
+			return { successful: false, error };
 		}
 	}
 
-	static async updateProfilePic(profilePic: File): Promise<OperationResult<undefined>> {
+	static async updateProfilePic(
+		profilePic: File
+	): Promise<OperationResult<undefined>> {
 		try {
 			const currentUser = firebase.auth().currentUser;
 			const email = currentUser?.email!;
 			const path = `USERS/PROFILE/${email}`;
 			const url = await uploadFile(profilePic, path);
 			await currentUser?.updateProfile({ photoURL: url });
-			return { successful: true }
+			return { successful: true };
 		} catch (error) {
-			return { successful: false, error }
+			return { successful: false, error };
 		}
 	}
-
-
 
 	static firebaseRef = firebase;
 }

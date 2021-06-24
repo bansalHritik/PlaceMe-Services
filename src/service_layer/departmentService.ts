@@ -1,5 +1,5 @@
 import { Department } from "../modals";
-import { Collection, collection, OperationResult } from "./common";
+import { Collection } from "./common";
 import FirebaseCollection from "./firebaseCollection";
 
 export default class DepartmentService extends FirebaseCollection<Department> {

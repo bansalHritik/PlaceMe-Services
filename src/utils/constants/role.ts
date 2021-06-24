@@ -1,10 +1,10 @@
 enum Role {
-	ADMIN,
-	STUDENT,
-	HOD,
-	FACULTY,
-	TPO,
-	HTOP,
+	ADMIN = "ADMIN",
+	STUDENT = "STUDENT",
+	HOD = "HOD",
+	FACULTY = "FACULTY",
+	TPO = "TPO",
+	HTOP = "HTOP",
 }
 
 export default Role;
