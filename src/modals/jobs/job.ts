@@ -8,7 +8,7 @@ export default interface Job {
 	salary: Salary;
 	bond: string;
 	forBatchs: number[];
-	lastDateToApply: Date;
+	lastDateToApply: Date | Timestamp;
 	rounds: Round[];
 	company: string;
 	maxBacklogs: number;

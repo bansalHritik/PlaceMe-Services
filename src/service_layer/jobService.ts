@@ -10,8 +10,21 @@ export default class JobService extends FirebaseCollection<Job> {
 
 	public add(data: Job): Promise<OperationResult<Result<Job>>> {
 		data.placedStudents = [];
+		const { lastDateToApply } = data
 		data.postDate = firebase.firestore.Timestamp.now();
+		data.lastDateToApply = firebase.firestore.Timestamp.fromDate(lastDateToApply as Date)
 		return super.add(data);
+	}
+
+	public async set(data: Job, id: string): Promise<OperationResult<Result<Job>>> {
+		try {
+			await this.collection.doc(id).set(data, { merge: true });
+			const { lastDateToApply } = data;
+			data.lastDateToApply = firebase.firestore.Timestamp.fromDate(lastDateToApply as Date)
+			return this.successResult({ data, id });
+		} catch (error) {
+			return { successful: false, error };
+		}
 	}
 
 	public async getAllByCompanyId(
