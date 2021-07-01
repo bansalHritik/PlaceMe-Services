@@ -8,6 +8,7 @@ export default class JobApplicationService extends FirebaseCollection<JobApplica
 	constructor() {
 		super(Collection.JOB_APPLICATIONS);
 	}
+
 	public async add(
 		jobId: JobApplication | string
 	): Promise<OperationResult<Result<JobApplication>>> {

@@ -3,7 +3,7 @@ export * from "./constants";
 export * from "./deepPartial";
 export * from "./timestamp";
 
-export const resolveDate = (date: Timestamp) => new Date(date.toDate());
+export const resolveDate = (date: Timestamp) => new Date(date?.toDate());
 
 export const isObject = (obj: any) => typeof obj === "object";
 
